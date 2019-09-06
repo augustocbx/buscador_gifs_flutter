@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 String TRENDING_URL =
     'https://api.giphy.com/v1/gifs/trending?api_key=FCZuRvAdCxeg0KQFIvsGTNJkwErmOEQS&limit=25&rating=R';
 String SEARCH_URL =
-    'https://api.giphy.com/v1/gifs/search?api_key=FCZuRvAdCxeg0KQFIvsGTNJkwErmOEQS&limit=20&rating=R&lang=en';
+    'https://api.giphy.com/v1/gifs/search?api_key=FCZuRvAdCxeg0KQFIvsGTNJkwErmOEQS&limit=19&rating=R&lang=en';
 
 class HomePage extends StatefulWidget {
   @override
@@ -23,7 +23,7 @@ class _HomePageState extends State<HomePage> {
     if (_search == null) {
       response = await http.get(TRENDING_URL);
     } else {
-      response = await http.get("SEARCH_URL&q=$_search&offset=$_offset");
+      response = await http.get("$SEARCH_URL&q=$_search&offset=$_offset");
     }
 
     return json.decode(response.body);
@@ -37,18 +37,27 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  int _getCount(List data) {
+    if (_search == null) {
+      return data.length;
+    } else {
+      return data.length + 1;
+    }
+  }
+
   Widget _createGifTable(BuildContext context, AsyncSnapshot snapshot) {
     return GridView.builder(
         padding: EdgeInsets.all(10.0),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 10.0,
-          mainAxisSpacing: 10.0
-        ),
+            crossAxisCount: 2, crossAxisSpacing: 10.0, mainAxisSpacing: 10.0),
         itemCount: snapshot.data['data'].length,
-        itemBuilder: (context, index){
+        itemBuilder: (context, index) {
           return GestureDetector(
-            child: Image.network(snapshot.data['data'][index]['images']['fixed_height']['url'], height: 300.0, fit: BoxFit.cover,),
+            child: Image.network(
+              snapshot.data['data'][index]['images']['fixed_height']['url'],
+              height: 300.0,
+              fit: BoxFit.cover,
+            ),
           );
         });
   }
@@ -68,6 +77,11 @@ class _HomePageState extends State<HomePage> {
           Padding(
             padding: EdgeInsets.all(10.0),
             child: TextField(
+              onSubmitted: (text) {
+                setState(() {
+                  _search = text;
+                });
+              },
               decoration: InputDecoration(
                   labelText: 'Pesquise Aqui!',
                   labelStyle: TextStyle(color: Colors.white),
