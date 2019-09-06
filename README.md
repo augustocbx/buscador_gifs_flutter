@@ -1,6 +1,8 @@
 # buscador_gifs
 
-A new Flutter application.
+Aplicação feita acompanhando o curso:
+
+https://www.udemy.com/curso-completo-flutter-app-android-ios
 
 ## Getting Started
 
