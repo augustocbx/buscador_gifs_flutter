@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:buscador_gifs/ui/gif_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:share/share.dart';
 
 String TRENDING_URL =
     'https://api.giphy.com/v1/gifs/trending?api_key=FCZuRvAdCxeg0KQFIvsGTNJkwErmOEQS&limit=19&rating=R';
@@ -63,6 +64,9 @@ class _HomePageState extends State<HomePage> {
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) =>
                     GifPage(snapshot.data['data'][index])));
+              },
+              onLongPress: (){
+                Share.share(snapshot.data['data'][index]['images']['fixed_height']['url']);
               },
             );
           } else {
