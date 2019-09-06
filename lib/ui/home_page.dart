@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:buscador_gifs/ui/gif_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -52,13 +53,17 @@ class _HomePageState extends State<HomePage> {
             crossAxisCount: 2, crossAxisSpacing: 10.0, mainAxisSpacing: 10.0),
         itemCount: _getCount(snapshot.data['data']),
         itemBuilder: (context, index) {
-          if (_search == null || index < snapshot.data['data'].length){
+          if (_search == null || index < snapshot.data['data'].length) {
             return GestureDetector(
               child: Image.network(
                 snapshot.data['data'][index]['images']['fixed_height']['url'],
                 height: 300.0,
                 fit: BoxFit.cover,
               ),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                    GifPage(snapshot.data['data'][index])));
+              },
             );
           } else {
             return GestureDetector(
@@ -66,17 +71,17 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Icon(Icons.add, color: Colors.white, size: 70.0,),
-                  Text('Carregar mais...', style: TextStyle(color: Colors.white, fontSize: 22.0),)
+                  Text('Carregar mais...',
+                    style: TextStyle(color: Colors.white, fontSize: 22.0),)
                 ],
               ),
-              onTap: (){
+              onTap: () {
                 setState(() {
                   _offset += 19;
                 });
               },
             );
           }
-
         });
   }
 
@@ -126,10 +131,10 @@ class _HomePageState extends State<HomePage> {
                       ),
                     );
                   case ConnectionState.active:
-                    // TODO: Handle this case.
+                  // TODO: Handle this case.
                     break;
                   case ConnectionState.done:
-                    // TODO: Handle this case.
+                  // TODO: Handle this case.
                     break;
                 }
                 if (snapshot.hasError) {
